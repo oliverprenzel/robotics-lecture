@@ -8,12 +8,15 @@ Programme für den mBot2 ohne Gerät am PC testen.
 Python 3.10 oder neuer. Im Ordner dieses Repos:
 
 ```powershell
-python -m venv .venv
-.venv\Scripts\pip install -r requirements.txt
-.venv\Scripts\python 01_lidar_polar_kartesisch.py    # alles am Stück
+python -m venv .venv                    # einmalig: eigene Python-Umgebung anlegen
+.venv\Scripts\Activate.ps1              # in jedem neuen Terminal: Umgebung aktivieren
+pip install -r requirements.txt         # einmalig: Pakete installieren
+python 01_lidar_polar_kartesisch.py     # alles am Stück
 ```
 
-Unter Linux und macOS heißt der Ordner `.venv/bin` statt `.venv\Scripts`.
+Nach dem Aktivieren steht `(.venv)` vor der Eingabezeile. Meldet PowerShell, dass Skripte nicht
+ausgeführt werden dürfen, einmalig `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` eingeben.
+Unter Linux und macOS aktiviert `source .venv/bin/activate`.
 
 In VS Code läuft jede Zelle (`# %%`) einzeln mit Shift+Enter. Als Interpreter `.venv` wählen.
 
