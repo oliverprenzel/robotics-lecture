@@ -27,6 +27,7 @@ US_KEGEL = 8.0                # Grad, halber Öffnungswinkel (Annahme)
 class Welt:
     def __init__(self, **kw):
         self.lock = threading.RLock()
+        self.lauf = 0                 # zählt cyberpi.stop_all(): Skripte (event.py) eines älteren Laufs enden
         self.konfigurieren(**kw)
 
     def konfigurieren(self, rad_radius=0.0325, spurweite=0.115, radius_fehler=0.01, gyro_bias=0.4,
@@ -92,10 +93,17 @@ class Welt:
                 self.rotation["z"] += math.degrees(self.w) * h
 
     def ruf(self, name, *args):
+        if getattr(threading.current_thread(), "mbot_lauf", self.lauf) != self.lauf:
+            raise SystemExit              # nach cyberpi.stop_all(): dieses Skript ist beendet
         with self.lock:
             self.aufrufe.append((name,) + args)
             if len(self.aufrufe) > 5000:
                 del self.aufrufe[:1000]
+
+    def alle_stoppen(self):
+        """cyberpi.stop_all(): alle Skripte aus event.py enden bei ihrem nächsten API-Aufruf."""
+        with self.lock:
+            self.lauf += 1
 
     # ---------------------------------------------------------------- Ultraschall
     def ultraschall(self):

@@ -4,6 +4,8 @@ Nachgebaut ist, was die mBot-Firmware nutzt, plus naheliegende Nachbarn, mit Nam
 Einheiten nach der Makeblock-Python-Dokumentation. Werte kommen aus dem simulierten mBot2
 in _mbot_welt.py (gemeinsam mit mbot2.py). Nicht nachgebaut: Ton, Kamera, Cloud, Sprache.
 """
+import threading
+
 from _mbot_welt import WELT
 
 _ACHSEN = ("x", "y", "z")
@@ -59,6 +61,15 @@ def get_yaw():
     WELT.weiter()
     with WELT.lock:
         return (math.degrees(WELT.pose[2]) + 180.0) % 360.0 - 180.0
+
+
+# ---------------------------------------------------------------- Skripte
+def stop_all():
+    """Alle laufenden Skripte beenden, auch das aufrufende. Motoren und LEDs behalten ihren Zustand."""
+    WELT.ruf("stop_all")
+    WELT.alle_stoppen()
+    if hasattr(threading.current_thread(), "mbot_lauf"):
+        raise SystemExit
 
 
 # ---------------------------------------------------------------- Akku

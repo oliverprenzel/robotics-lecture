@@ -25,7 +25,7 @@ def installieren():
     """Verzeichnis in sys.path, Module laden; gibt (cyberpi, mbot2, WELT) zurück."""
     if PFAD not in sys.path:
         sys.path.insert(0, PFAD)
-    for name in ("cyberpi", "mbot2", "mbuild"):
+    for name in ("cyberpi", "mbot2", "mbuild", "event"):
         m = sys.modules.get(name)
         if m is not None and not getattr(m, "__file__", "").startswith(PFAD):
             raise RuntimeError(f"Modul {name} ist schon geladen und kommt nicht aus mbot_sim: {m}")
@@ -33,4 +33,5 @@ def installieren():
     import cyberpi
     import mbot2
     import mbuild  # noqa: F401  (Ultraschallsensor 2)
+    import event  # noqa: F401  (Ereignisse aus mBlock: Programmstart, Tasten)
     return cyberpi, mbot2, _mbot_welt.WELT
