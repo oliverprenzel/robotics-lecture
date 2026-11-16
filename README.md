@@ -28,6 +28,7 @@ In VS Code läuft jede Zelle (`# %%`) einzeln mit Shift+Enter. Als Interpreter `
 | [02_flur_mapping.py](02_flur_mapping.py) | Mapping: Ein Bot entdeckt einen Flur mit Einbuchtungen, Animation im eigenen Fenster |
 | [03_lidar_realistisch.py](03_lidar_realistisch.py) | Derselbe Flur wie ein echter Scan, mit Rauschen, Aussetzern und Mischpixeln |
 | [04_mbot_strecke_fahren.py](04_mbot_strecke_fahren.py) | mBot2 ohne Gerät: 1 m geradeaus nach den Radencodern, Vergleich mit der wahren Strecke |
+| [05_mbot_wand.py](05_mbot_wand.py) | mBot2 ohne Gerät: vor einer Wand anhalten (Ultraschall), 90° drehen (Gyro), Live-Fenster |
 | [filtern.py](filtern.py) | Messwerte filtern: Plausibilitätsprüfung, gleitender Mittelwert, gleitender Median |
 | [lidar_sim.py](lidar_sim.py) | Kleiner Laserscanner-Simulator für die Beispiele |
 | [mbot_sim/](mbot_sim/) | Simulierter mBot2 für den PC: `cyberpi`, `mbot2`, `mbuild` ohne Gerät |
@@ -40,8 +41,8 @@ cyberpi, mbot2, welt = installieren()     # danach liefern import cyberpi, mbot2
 welt.konfigurieren(tastatur=True)         # Tasten a, b, m, Pfeiltasten im Terminal (Windows)
 ```
 
-`cyberpi.display.show_label` schreibt in die Konsole. Ein vollständiges Beispiel ist
-[04_mbot_strecke_fahren.py](04_mbot_strecke_fahren.py).
+`cyberpi.display.show_label` schreibt in die Konsole. Vollständige Beispiele sind
+[04_mbot_strecke_fahren.py](04_mbot_strecke_fahren.py) und [05_mbot_wand.py](05_mbot_wand.py).
 
 Dieses Repo ist eine Kopie zum Lesen und Ausprobieren und wird vor den Vorlesungen aktualisiert.
 Eigene Änderungen am besten in einer eigenen Kopie (Fork) machen.
