@@ -8,12 +8,17 @@ wird. Am PC kommen `cyberpi` und `mbot2` aus dem Ordner mbot_sim/: ein nachgebau
 Motoren, Encodern, Gyro, Ultraschall, Tasten und Anzeige. Er läuft in Echtzeit, die Fahrt dauert
 etwa 7 Sekunden. Die Anzeige des CyberPi erscheint in der Konsole.
 
+Das Programm wartet auf die Taste A des CyberPi. Am PC ist das die Taste a im Terminal. Das geht
+nur unter Windows und nur in einem Terminal, nicht im Interactive Window von VS Code. Wo keine
+Taste ankommt, die Zeile mit tastatur=True durch welt.druecken("a") ersetzen.
+
 Der simulierte mBot2 hat ein Rad, das 1 % größer ist als angenommen. Die Encoder merken davon
 nichts: Der Bot hält, wenn er glaubt, 100 cm gefahren zu sein, und steht in Wahrheit weiter vorn.
 """
 from mbot_sim import installieren
 
 cyberpi, mbot2, welt = installieren()      # ab jetzt liefern import cyberpi, mbot2, mbuild den simulierten mBot2
+welt.konfigurieren(tastatur=True)          # Tasten a, b im Terminal gelten als Tasten des CyberPi (Windows)
 
 # ---------------------------------------------------------------- Programm wie am mBot2
 import math
@@ -22,6 +27,11 @@ import time
 D = 6.5                                    # Raddurchmesser in cm
 S = 100.0                                  # Soll-Strecke in cm
 ziel = S * 360 / (math.pi * D)             # Drehwinkel des Rades in Grad für die Strecke S
+
+
+cyberpi.display.show_label("Taste A druecken", 16, 0, 0)
+while not cyberpi.controller.is_press("a"):
+    pass
 
 cyberpi.display.show_label("Ziel: " + str(round(ziel)) + " Grad", 16, 0, 0)
 cyberpi.led.on(0, 255, 0)                  # alle LEDs grün
