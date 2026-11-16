@@ -27,6 +27,7 @@ In VS Code läuft jede Zelle (`# %%`) einzeln mit Shift+Enter. Als Interpreter `
 | [01_lidar_polar_kartesisch.py](01_lidar_polar_kartesisch.py) | Auswertung eines Laserscans: Kiste vor Wand, Polarplot, Umrechnung nach x und y |
 | [02_flur_mapping.py](02_flur_mapping.py) | Mapping: Ein Bot entdeckt einen Flur mit Einbuchtungen, Animation im eigenen Fenster |
 | [03_lidar_realistisch.py](03_lidar_realistisch.py) | Derselbe Flur wie ein echter Scan, mit Rauschen, Aussetzern und Mischpixeln |
+| [videos/](videos/) | Die Animationen aus 02 und 03 als Video (MP4), zum Ansehen ohne Python |
 | [04_mbot_strecke_fahren.py](04_mbot_strecke_fahren.py) | Programm für den mBot2: 1 m geradeaus nach den Radencodern; am PC über den Starter |
 | [05_mbot_wand.py](05_mbot_wand.py) | mBot2 ohne Gerät: vor einer Wand anhalten (Ultraschall), 90° drehen (Gyro), Live-Fenster |
 | [filtern.py](filtern.py) | Messwerte filtern: Plausibilitätsprüfung, gleitender Mittelwert, gleitender Median |
