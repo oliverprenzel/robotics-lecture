@@ -11,7 +11,7 @@ Python 3.10 oder neuer. Im Ordner dieses Repos:
 python -m venv .venv                    # einmalig: eigene Python-Umgebung anlegen
 .venv\Scripts\Activate.ps1              # in jedem neuen Terminal: Umgebung aktivieren
 pip install -r requirements.txt         # einmalig: Pakete installieren
-python 01_lidar_polar_kartesisch.py     # alles am Stück
+python 01_lidar_polar_kartesisch.py     # ganzes Beispiel auf einmal ausführen
 ```
 
 Nach dem Aktivieren steht `(.venv)` vor der Eingabezeile. Meldet PowerShell, dass Skripte nicht
