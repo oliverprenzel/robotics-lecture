@@ -1,3 +1,4 @@
+# Mobile Robotik, Oliver Prenzel mit Claude (Anthropic) · github.com/oliverprenzel/robotics-lecture · MIT-Lizenz
 """Demo: Derselbe Flur wie in 02_flur_mapping.py, so wie ihn ein echter Laserscanner sieht.
 
 Nur zum Vorführen, das Skript läuft am Stück:

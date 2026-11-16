@@ -45,3 +45,5 @@ Eigene Änderungen am besten in einer eigenen Kopie (Fork) machen.
 
 MIT-Lizenz, siehe [LICENSE](LICENSE): Der Code darf frei genutzt, geändert und weitergegeben werden,
 solange der Urheberhinweis erhalten bleibt.
+
+Die Beispiele sind mit Unterstützung von Claude (Anthropic) entstanden.

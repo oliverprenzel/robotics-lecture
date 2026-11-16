@@ -1,3 +1,4 @@
+# Mobile Robotik, Oliver Prenzel mit Claude (Anthropic) · github.com/oliverprenzel/robotics-lecture · MIT-Lizenz
 """Kleiner Laserscanner-Simulator für die Vorlesungsbeispiele.
 
 Szene aus Skript 3.5: Der Roboter steht im Ursprung und schaut in +x-Richtung

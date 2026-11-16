@@ -1,3 +1,4 @@
+# Mobile Robotik, Oliver Prenzel mit Claude (Anthropic) · github.com/oliverprenzel/robotics-lecture · MIT-Lizenz
 D_MIN, D_MAX = 3, 300      # Messbereich in cm, am Datenblatt prüfen
 
 def plausibel(d):

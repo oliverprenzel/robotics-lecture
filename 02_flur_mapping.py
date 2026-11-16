@@ -1,3 +1,4 @@
+# Mobile Robotik, Oliver Prenzel mit Claude (Anthropic) · github.com/oliverprenzel/robotics-lecture · MIT-Lizenz
 # %% [markdown]
 # # Mapping: Ein Bot entdeckt einen Flur mit Einbuchtungen
 #
