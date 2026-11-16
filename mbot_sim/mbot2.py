@@ -1,11 +1,11 @@
-"""Attrappe des Makeblock-Moduls `mbot2` (nachgebaut für Tests am PC, nicht vom Hersteller).
+"""Nachbau des Makeblock-Moduls `mbot2` (nachgebaut für Tests am PC, nicht vom Hersteller).
 
 Encodermotoren an EM1 (linkes Rad) und EM2 (rechtes Rad, spiegelbildlich: mbot2.forward
 entspricht drive_speed(+v, -v)). Drehzahlen in U/min, Winkel in Grad. Werte kommen aus dem
-simulierten mBot2 in _attrappe_welt.py. Nicht nachgebaut: Servos, Gleichstrommotoren an DC1-4,
+simulierten mBot2 in _mbot_welt.py. Nicht nachgebaut: Servos, Gleichstrommotoren an DC1-4,
 Sensoren am mBuild-Bus.
 """
-from _attrappe_welt import RPM_MAX, WELT
+from _mbot_welt import RPM_MAX, WELT
 
 _PORTS = ("EM1", "EM2")
 

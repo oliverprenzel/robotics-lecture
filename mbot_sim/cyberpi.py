@@ -1,10 +1,10 @@
-"""Attrappe des Makeblock-Moduls `cyberpi` (nachgebaut für Tests am PC, nicht vom Hersteller).
+"""Nachbau des Makeblock-Moduls `cyberpi` (nachgebaut für Tests am PC, nicht vom Hersteller).
 
 Nachgebaut ist, was die mBot-Firmware nutzt, plus naheliegende Nachbarn, mit Namen und
 Einheiten nach der Makeblock-Python-Dokumentation. Werte kommen aus dem simulierten mBot2
-in _attrappe_welt.py (gemeinsam mit mbot2.py). Nicht nachgebaut: Ton, Kamera, Cloud, Sprache.
+in _mbot_welt.py (gemeinsam mit mbot2.py). Nicht nachgebaut: Ton, Kamera, Cloud, Sprache.
 """
-from _attrappe_welt import WELT
+from _mbot_welt import WELT
 
 _ACHSEN = ("x", "y", "z")
 
@@ -110,7 +110,7 @@ console = _Console()
 
 
 class _Display:
-    """Anzeige mit frei platzierten Texten. Die Attrappe gibt sie mit print aus."""
+    """Anzeige mit frei platzierten Texten. Der Nachbau gibt sie mit print aus."""
 
     def show_label(self, message, fontsize=16, x=0, y=0, index=0):
         WELT.ruf("display.show_label", message, fontsize, x, y, index)

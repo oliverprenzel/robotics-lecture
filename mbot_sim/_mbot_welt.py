@@ -1,10 +1,10 @@
-"""Gemeinsamer Zustand der Attrappe: ein simulierter mBot2, den cyberpi.py und mbot2.py lesen und steuern.
+"""Gemeinsamer Zustand von mbot_sim: ein simulierter mBot2, den cyberpi.py und mbot2.py lesen und steuern.
 
 Modell: zwei Radmotoren mit Anlaufzeit (EM1 = linkes Rad, EM2 = rechtes Rad, spiegelbildlich
 eingebaut: positive Drehzahl an EM2 dreht das rechte Rad rückwärts, wie beim mBot2),
 Radwinkel in Grad (ganzzahlig, wie die Encoder), wahrer Radradius etwas anders als
 konfiguriert, Gyro mit Nullpunktfehler und Rauschen, Akku, Tasten, Anzeige, LED, WLAN.
-Die Zeit ist die echte Uhr (time.monotonic): die Attrappe läuft in Echtzeit.
+Die Zeit ist die echte Uhr (time.monotonic): der simulierte mBot2 läuft in Echtzeit.
 """
 import math
 import random

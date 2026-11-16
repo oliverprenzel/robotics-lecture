@@ -1,4 +1,4 @@
-"""Attrappe des Makeblock-Moduls `mbuild` (nachgebaut, nicht vom Hersteller): Ultraschall-
+"""Nachbau des Makeblock-Moduls `mbuild` (nachgebaut, nicht vom Hersteller): Ultraschall-
 sensor 2 und Quad-RGB-Sensor (Linienfolger) des mBot2.
 
 - mbuild.ultrasonic2.get(index) -> Abstand in cm (5..300, außerhalb des Bereichs 300),
@@ -7,7 +7,7 @@ sensor 2 und Quad-RGB-Sensor (Linienfolger) des mBot2.
   L2 = höchstes Bit; Bit gesetzt = Hintergrund, nicht Linie (wie naman466/mBot2-simulator;
   am Gerät prüfen: rover/mbot.toml quad_linie_bit). is_line(ch, index) -> bool.
 """
-from _attrappe_welt import WELT
+from _mbot_welt import WELT
 
 
 class _Ultraschall2:
