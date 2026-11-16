@@ -40,3 +40,8 @@ welt.konfigurieren(tastatur=True)         # Tasten a, b, m, Pfeiltasten im Termi
 
 Dieses Repo ist eine Kopie zum Lesen und Ausprobieren und wird vor den Vorlesungen aktualisiert.
 Eigene Änderungen am besten in einer eigenen Kopie (Fork) machen.
+
+## Lizenz
+
+MIT-Lizenz, siehe [LICENSE](LICENSE): Der Code darf frei genutzt, geändert und weitergegeben werden,
+solange der Urheberhinweis erhalten bleibt.
