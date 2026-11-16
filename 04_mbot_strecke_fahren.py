@@ -1,40 +1,29 @@
-# Mobile Robotik, Oliver Prenzel mit Claude (Anthropic) · github.com/oliverprenzel/robotics-lecture · MIT-Lizenz
-"""mBot2 ohne Gerät: 1 m geradeaus fahren, die Strecke mit den Radencodern messen.
-
-    python 04_mbot_strecke_fahren.py
-
-Das Programm zwischen den beiden Trennlinien ist dasselbe, das in mBlock auf den mBot2 geladen
-wird. Am PC kommen `cyberpi` und `mbot2` aus dem Ordner mbot_sim/: ein nachgebauter mBot2 mit
-Motoren, Encodern, Gyro, Ultraschall, Tasten und Anzeige. Er läuft in Echtzeit, die Fahrt dauert
-etwa 7 Sekunden. Die Anzeige des CyberPi erscheint in der Konsole.
-
-Das Programm wartet auf die Taste A des CyberPi. Am PC ist das die Taste a im Terminal. Das geht
-nur unter Windows und nur in einem Terminal, nicht im Interactive Window von VS Code. Wo keine
-Taste ankommt, die Zeile mit tastatur=True durch welt.druecken("a") ersetzen.
-
-Der simulierte mBot2 hat ein Rad, das 1 % größer ist als angenommen. Die Encoder merken davon
-nichts: Der Bot hält, wenn er glaubt, 100 cm gefahren zu sein, und steht in Wahrheit weiter vorn.
-"""
-from mbot_sim import installieren
-
-cyberpi, mbot2, welt = installieren()      # ab jetzt liefern import cyberpi, mbot2, mbuild den simulierten mBot2
-welt.konfigurieren(tastatur=True)          # Tasten a, b im Terminal gelten als Tasten des CyberPi (Windows)
-
-# ---------------------------------------------------------------- Programm wie am mBot2
-import math
-import time
+# Mobile Robotik, Oliver Prenzel mit Claude (Anthropic) - github.com/oliverprenzel/robotics-lecture - MIT-Lizenz
+#
+# mBot2: 1 m geradeaus fahren, die Strecke mit den Radencodern messen.
+#
+# Diese Datei ist das Programm fuer den mBot2, so wie es in mBlock hochgeladen wird.
+# Am PC laeuft sie unveraendert auf dem simulierten mBot2:
+#
+#     python mbot_sim_start.py 04_mbot_strecke_fahren.py
+#
+# Das Programm wartet auf die Taste A, am PC ist das die Taste a im Terminal (Windows).
+# Die Fahrt dauert etwa 7 Sekunden. Am Ende nennt der Starter die wahre Strecke: Der simulierte
+# mBot2 hat ein Rad, das 1 % groesser ist als angenommen. Die Encoder merken davon nichts.
+#
+# Ohne Umlaute, damit die Datei auf dem CyberPi sicher laeuft.
+import cyberpi, mbot2, time, math
 
 D = 6.5                                    # Raddurchmesser in cm
 S = 100.0                                  # Soll-Strecke in cm
-ziel = S * 360 / (math.pi * D)             # Drehwinkel des Rades in Grad für die Strecke S
-
+ziel = S * 360 / (math.pi * D)             # Drehwinkel des Rades in Grad fuer die Strecke S
 
 cyberpi.display.show_label("Taste A druecken", 16, 0, 0)
 while not cyberpi.controller.is_press("a"):
     pass
 
 cyberpi.display.show_label("Ziel: " + str(round(ziel)) + " Grad", 16, 0, 0)
-cyberpi.led.on(0, 255, 0)                  # alle LEDs grün
+cyberpi.led.on(0, 255, 0)                  # alle LEDs gruen
 
 mbot2.EM_reset_angle(1)
 mbot2.EM_reset_angle(2)
@@ -46,10 +35,6 @@ while abs(mbot2.EM_get_angle(1)) < ziel:
 
 mbot2.EM_stop()
 cyberpi.led.on(255, 0, 0)                  # alle LEDs rot
-cyberpi.display.show_label("Fertig", 16, 0, 0)
-# ---------------------------------------------------------------- Ende des Programms
 
-# Nur am PC: Die Simulation kennt die wahre Position. Am echten mBot2 misst das Maßband.
-x, y, th = welt.wahr()
-print("Encoder: %.1f cm gefahren" % (abs(mbot2.EM_get_angle(1)) * math.pi * D / 360))
-print("wahr:    %.1f cm gefahren, %.1f cm seitlich, %.1f Grad gedreht" % (100 * x, 100 * y, math.degrees(th)))
+weg = abs(mbot2.EM_get_angle(1)) * math.pi * D / 360
+cyberpi.display.show_label("Fertig\nEncoder: %.1f cm" % weg, 16, 0, 0)

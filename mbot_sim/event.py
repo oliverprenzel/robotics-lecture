@@ -57,6 +57,11 @@ def is_press(name):
     return anmelden
 
 
+def angemeldet():
+    """True, wenn das Programm Tasten-Ereignisse angemeldet hat (dann läuft es weiter, bis man es beendet)."""
+    return bool(_tasten)
+
+
 def warten():
     """Nur am PC: Programm am Leben halten, bis Ctrl+C kommt. Am CyberPi läuft es von selbst weiter."""
     try:
