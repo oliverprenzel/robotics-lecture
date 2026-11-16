@@ -1,7 +1,7 @@
 # Mobile Robotik, Oliver Prenzel mit Claude (Anthropic) · github.com/oliverprenzel/robotics-lecture · MIT-Lizenz
 """Kleiner Laserscanner-Simulator für die Vorlesungsbeispiele.
 
-Szene aus Skript 3.5: Der Roboter steht im Ursprung und schaut in +x-Richtung
+Szene aus dem Skript: Der Roboter steht im Ursprung und schaut in +x-Richtung
 (x nach vorn, y nach links). Eine lange, gerade Wand steht 1,0 m vor ihm,
 davor, etwas links, eine Kiste. Die Szene besteht aus Strecken.
 """
@@ -83,7 +83,7 @@ def messe(phi_grad, sensor=(0.0, 0.0), rauschen=0.0, seed=1, strecken=None):
     phi_grad: Winkel der Strahlen in Grad
     sensor:   Position (x_S, y_S) des Scanners in Metern
     rauschen: Standardabweichung des Abstands in Metern
-    strecken: Szene als Liste von Strecken, ohne Angabe die Szene aus Skript 3.5
+    strecken: Szene als Liste von Strecken, ohne Angabe die Szene aus dem Skript
     Liefert die Abstände r in Metern (NaN: kein Echo).
     """
     if strecken is None:

@@ -1,6 +1,6 @@
 # Mobile Robotik, Oliver Prenzel mit Claude (Anthropic) · github.com/oliverprenzel/robotics-lecture · MIT-Lizenz
 # %% [markdown]
-# # Auswertung eines Laserscans (Abschnitt 3.5, Vorlesung 5)
+# # Auswertung eines Laserscans
 #
 # Ein Laserscanner liefert eine Folge von Abständen r₀, r₁, …
 # Der Winkel ergibt sich aus dem Index: ϕᵢ = ϕ₀ + i·Δϕ

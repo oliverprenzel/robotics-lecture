@@ -4,7 +4,7 @@
 Nur zum Vorführen, das Skript läuft am Stück:
     .venvLecture\\Scripts\\python lecture\\03_lidar_realistisch.py
 
-Der Scanner entspricht dem Beispiel aus Vorlesung 5: 270° in 0,25°-Schritten, 1081 Strahlen.
+Der Scanner entspricht dem Beispiel aus der Vorlesung: 270° in 0,25°-Schritten, 1081 Strahlen.
 Hinter dem Scanner liegt ein toter Winkel von 90°.
 
 Effekte echter Scans:
