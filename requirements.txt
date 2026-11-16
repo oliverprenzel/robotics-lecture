@@ -1,0 +1,3 @@
+numpy
+matplotlib
+ipykernel             # Zellen (# %%) im Interactive Window von VS Code

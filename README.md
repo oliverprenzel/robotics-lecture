@@ -1,0 +1,42 @@
+# Mobile Robotik: Codebeispiele zur Vorlesung
+
+Beispiele zum Nachvollziehen und Ausprobieren: Laserscans auswerten, einen Flur kartieren und
+Programme für den mBot2 ohne Gerät am PC testen.
+
+## Einrichten
+
+Python 3.10 oder neuer. Im Ordner dieses Repos:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\pip install -r requirements.txt
+.venv\Scripts\python 01_lidar_polar_kartesisch.py    # alles am Stück
+```
+
+Unter Linux und macOS heißt der Ordner `.venv/bin` statt `.venv\Scripts`.
+
+In VS Code läuft jede Zelle (`# %%`) einzeln mit Shift+Enter. Als Interpreter `.venv` wählen.
+
+## Inhalt
+
+| Datei | Inhalt |
+|---|---|
+| [01_lidar_polar_kartesisch.py](01_lidar_polar_kartesisch.py) | Auswertung eines Laserscans: Kiste vor Wand, Polarplot, Umrechnung nach x und y |
+| [02_flur_mapping.py](02_flur_mapping.py) | Mapping: Ein Bot entdeckt einen Flur mit Einbuchtungen, Animation im eigenen Fenster |
+| [03_lidar_realistisch.py](03_lidar_realistisch.py) | Derselbe Flur wie ein echter Scan, mit Rauschen, Aussetzern und Mischpixeln |
+| [filtern.py](filtern.py) | Messwerte filtern: Plausibilitätsprüfung, gleitender Mittelwert, gleitender Median |
+| [lidar_sim.py](lidar_sim.py) | Kleiner Laserscanner-Simulator für die Beispiele |
+| [attrappe/](attrappe/) | Nachgebauter mBot2 für den PC: `cyberpi`, `mbot2`, `mbuild` ohne Gerät |
+
+## mBot2 ohne Gerät
+
+```python
+from attrappe import installieren
+cyberpi, mbot2, welt = installieren()     # danach liefern import cyberpi, mbot2, mbuild die Attrappe
+welt.konfigurieren(tastatur=True)         # Tasten a, b, m, Pfeiltasten im Terminal (Windows)
+```
+
+`cyberpi.display.show_label` schreibt in die Konsole.
+
+Dieses Repo ist eine Kopie zum Lesen und Ausprobieren und wird vor den Vorlesungen aktualisiert.
+Eigene Änderungen am besten in einer eigenen Kopie (Fork) machen.
