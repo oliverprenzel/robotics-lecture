@@ -4,6 +4,7 @@ Modell: zwei Radmotoren mit Anlaufzeit (EM1 = linkes Rad, EM2 = rechtes Rad, spi
 eingebaut: positive Drehzahl an EM2 dreht das rechte Rad rückwärts, wie beim mBot2),
 Radwinkel in Grad (ganzzahlig, wie die Encoder), wahrer Radradius etwas anders als
 konfiguriert, Gyro mit Nullpunktfehler und Rauschen, Akku, Tasten, Anzeige, LED, WLAN.
+Wahlweise (REALISTISCH): ungleiche Räder, Schlupf beim Drehen, Drift von get_rotation.
 Die Zeit ist die echte Uhr (time.monotonic): der simulierte mBot2 läuft in Echtzeit.
 """
 import math
@@ -23,6 +24,12 @@ US_BEREICH = (0.05, 3.00)     # m, Ultraschallsensor 2: Ausgabe 5..300 cm, auße
 US_FEHLER = 0.05              # ±5 % (Datenblatt) -> 1 sigma ~2,5 %
 US_KEGEL = 8.0                # Grad, halber Öffnungswinkel (Annahme)
 
+# Typische Fehler eines echten mBot2 für Labor 2 (Koppelnavigation), Annahmen, nicht gemessen:
+# rechtes Rad 1 % größer als das linke, wahrer Radradius 1 % größer als eingetragen, wirksame
+# Spurweite beim Drehen 2 % größer (Schlupf), Gyro 0,5 % Maßstabsfehler, 0,6 °/min Drift
+REALISTISCH = dict(radius_fehler=0.01, rad_ungleich=0.01, spur_fehler=0.02, gyro_skala=0.995,
+                   rotation_drift=0.01)
+
 
 class Welt:
     def __init__(self, **kw):
@@ -33,16 +40,24 @@ class Welt:
     def konfigurieren(self, rad_radius=0.0325, spurweite=0.115, radius_fehler=0.01, gyro_bias=0.4,
                       gyro_rauschen=0.15, start=(0.0, 0.0, 0.0), seed=1, akku=87.0, ssid=None, passwort=None,
                       protokoll=False, hindernisse=(), us_position=(0.105, 0.0), marken=(),
-                      quad=(0.088, (0.024, 0.008, -0.008, -0.024)), gyro_skala=1.0, tastatur=False):
+                      quad=(0.088, (0.024, 0.008, -0.008, -0.024)), gyro_skala=1.0, tastatur=False,
+                      rad_ungleich=0.0, spur_fehler=0.0, rotation_drift=0.0, aufgebockt=False):
         """Alles zurück auf Anfang. ssid/passwort: nur dieses WLAN „gibt es“ (None = jedes).
         tastatur: Tasten der PC-Tastatur im Terminal gelten als Tasten des CyberPi (tastatur_lesen).
         hindernisse: Polygone [(x, y), ...] im Rahmen der wahren Pose (für den Ultraschall).
         marken: Klebebänder am Boden [((x0, y0), (x1, y1), breite), ...] für den Linienfolger;
-        quad: (Abstand vor der Radachse, Querlage der Sonden L2, L1, R1, R2) [m]."""
+        quad: (Abstand vor der Radachse, Querlage der Sonden L2, L1, R1, R2) [m].
+        rad_ungleich: rechtes Rad um diesen Anteil größer als das linke (Kurve trotz gleicher Encoder).
+        spur_fehler: wirksame Spurweite um diesen Anteil größer als spurweite (Schlupf beim Drehen).
+        rotation_drift: Drift von get_rotation [Grad/s], auch im Stillstand.
+        aufgebockt: Räder drehen frei, der mBot bewegt sich nicht (Pose und Gyro bleiben)."""
         with getattr(self, "lock", threading.RLock()):
             self.rnd = random.Random(seed)
             self.r_true = rad_radius * (1.0 + radius_fehler)
-            self.b = spurweite
+            self.r_rechts = self.r_true * (1.0 + rad_ungleich)
+            self.b = spurweite * (1.0 + spur_fehler)
+            self.drift = float(rotation_drift)
+            self.aufgebockt = bool(aufgebockt)
             self.bias, self.rauschen = gyro_bias, gyro_rauschen
             self.gyro_skala = float(gyro_skala)        # gemessene / wahre Drehrate (Maßstabsfehler des Gyro)
             self.pose = [float(a) for a in start]     # wahre Pose x, y, th (auch aus NumPy-Werten)
@@ -84,13 +99,22 @@ class Welt:
                 for m in ("EM1", "EM2"):
                     self.rpm[m] += (self.soll[m] - self.rpm[m]) * a
                     self.winkel[m] += self.rpm[m] * 6.0 * h          # U/min -> Grad/s
-                k = 2 * math.pi / 60 * self.r_true
-                vl, vr = self.rpm["EM1"] * k, -self.rpm["EM2"] * k   # EM2 spiegelbildlich
-                self.v, self.w = 0.5 * (vl + vr), (vr - vl) / self.b
+                k = 2 * math.pi / 60
+                vl, vr = self.rpm["EM1"] * k * self.r_true, -self.rpm["EM2"] * k * self.r_rechts   # EM2 spiegelbildlich
+                self.v, self.w = (0.0, 0.0) if self.aufgebockt else (0.5 * (vl + vr), (vr - vl) / self.b)
                 x, y, th = self.pose
                 m_ = th + 0.5 * self.w * h
                 self.pose = [x + self.v * h * math.cos(m_), y + self.v * h * math.sin(m_), th + self.w * h]
-                self.rotation["z"] += math.degrees(self.w) * h
+                self.rotation["z"] += (self.gyro_skala * math.degrees(self.w) + self.drift) * h
+
+    def stossen(self, winkel=0.0, seitlich=0.0):
+        """Stoß von außen: dreht den mBot um winkel [Grad] und versetzt ihn seitlich [m].
+        Der Gyro misst die Drehung mit, die Encoder merken nichts."""
+        self.weiter()
+        with self.lock:
+            x, y, th = self.pose
+            self.pose = [x - math.sin(th) * seitlich, y + math.cos(th) * seitlich, th + math.radians(winkel)]
+            self.rotation["z"] += self.gyro_skala * winkel
 
     def ruf(self, name, *args):
         if getattr(threading.current_thread(), "mbot_lauf", self.lauf) != self.lauf:

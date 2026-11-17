@@ -31,6 +31,7 @@ In VS Code läuft jede Zelle (`# %%`) einzeln mit Shift+Enter. Als Interpreter `
 | [04_mbot_strecke_fahren.py](04_mbot_strecke_fahren.py) | Programm für den mBot2: 1 m geradeaus nach den Radencodern; am PC über den Starter |
 | [05_mbot_wand.py](05_mbot_wand.py) | mBot2 ohne Gerät: vor einer Wand anhalten (Ultraschall), 90° drehen (Gyro), Live-Fenster |
 | [filtern.py](filtern.py) | Messwerte filtern: Plausibilitätsprüfung, gleitender Mittelwert, gleitender Median |
+| [labor2/programmgeruest.py](labor2/programmgeruest.py) | Labor 2: vorgegebenes Programmgerüst (Positionsbestimmung, Fahrfunktionen zum Ergänzen); am PC: `python mbot_sim_start.py labor2\programmgeruest.py` |
 | [lidar_sim.py](lidar_sim.py) | Kleiner Laserscanner-Simulator für die Beispiele |
 | [mbot_sim_start.py](mbot_sim_start.py) | Starter: ein mBot2-Programm unverändert am PC auf dem simulierten mBot2 laufen lassen |
 | [mbot_sim/](mbot_sim/) | Simulierter mBot2 für den PC: `cyberpi`, `mbot2`, `mbuild`, `event` ohne Gerät |
@@ -42,6 +43,7 @@ Ein Programm für den mBot2 läuft unverändert am PC, so wie es in mBlock hochg
 ```powershell
 python mbot_sim_start.py 04_mbot_strecke_fahren.py     # leerer Raum
 python mbot_sim_start.py mein_programm.py --wand 80    # Wand 80 cm vor dem Ultraschallsensor
+python mbot_sim_start.py mein_programm.py --realistisch   # ungleiche Räder, Schlupf, Gyro-Drift wie am echten mBot2
 ```
 
 `cyberpi`, `mbot2`, `mbuild` und `event` kommen dabei aus [mbot_sim/](mbot_sim/). Die Tasten des CyberPi

@@ -32,7 +32,7 @@ def get_gyro(axis):
 
 
 def get_rotation(axis):
-    """Aufsummierter Drehwinkel [Grad] seit reset_rotation (ohne Nullpunktfehler)."""
+    """Aufsummierter Drehwinkel [Grad] seit reset_rotation, mit Maßstabsfehler und Drift (rotation_drift)."""
     a = _achse(axis)
     WELT.ruf("get_rotation", a)
     WELT.weiter()
