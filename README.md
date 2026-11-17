@@ -31,6 +31,7 @@ In VS Code läuft jede Zelle (`# %%`) einzeln mit Shift+Enter. Als Interpreter `
 | [04_mbot_strecke_fahren.py](04_mbot_strecke_fahren.py) | Programm für den mBot2: 1 m geradeaus nach den Radencodern; am PC über den Starter |
 | [05_mbot_wand.py](05_mbot_wand.py) | mBot2 ohne Gerät: vor einer Wand anhalten (Ultraschall), 90° drehen (Gyro), Live-Fenster |
 | [filtern.py](filtern.py) | Messwerte filtern: Plausibilitätsprüfung, gleitender Mittelwert, gleitender Median |
+| [labor1/US_Messung_Template.py](labor1/US_Messung_Template.py) | Labor 1: Vorlage Ultraschall-Messreihe (Mittelwert, Minimum, Maximum, Standardabweichung), Lücken zum Ergänzen |
 | [labor2/programmgeruest.py](labor2/programmgeruest.py) | Labor 2: vorgegebenes Programmgerüst (Positionsbestimmung, Fahrfunktionen zum Ergänzen); am PC: `python mbot_sim_start.py labor2\programmgeruest.py` |
 | [lidar_sim.py](lidar_sim.py) | Kleiner Laserscanner-Simulator für die Beispiele |
 | [mbot_sim_start.py](mbot_sim_start.py) | Starter: ein mBot2-Programm unverändert am PC auf dem simulierten mBot2 laufen lassen |
