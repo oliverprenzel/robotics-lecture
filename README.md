@@ -43,7 +43,20 @@ die eigenen Änderungen. Neue eigene Dateien stören nicht.
 
 ## Umgebung einrichten
 
-Python 3.10 oder neuer. Im Ordner dieses Repos:
+Vorbedingung ist Python 3.10 oder neuer. Fehlt Python, den Installer von
+[python.org/downloads](https://www.python.org/downloads/) herunterladen und ausführen. Unter Windows
+im ersten Fenster des Installers **„Add python.exe to PATH“** anhaken. Danach ein neues Terminal öffnen
+und prüfen:
+
+```powershell
+python --version                        # zeigt z. B. Python 3.12.7
+```
+
+Öffnet sich stattdessen der Microsoft Store, ist Python noch nicht im PATH: den Installer erneut
+ausführen und *Modify* oder *Repair* wählen, oder unter *Einstellungen → Apps → Erweiterte
+App-Einstellungen → App-Ausführungsaliase* die Einträge für `python.exe` ausschalten.
+
+Dann im Ordner dieses Repos:
 
 ```powershell
 python -m venv .venv                    # einmalig: eigene Python-Umgebung anlegen
