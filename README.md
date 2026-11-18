@@ -3,7 +3,7 @@
 Beispiele zum Nachvollziehen und Ausprobieren: Laserscans auswerten, einen Flur kartieren und
 Programme für den mBot2 ohne Gerät am PC testen.
 
-## Herunterladen und aktualisieren
+## Repository (Code) herunterladen und aktualisieren
 
 Am einfachsten in [VS Code](https://code.visualstudio.com/): Git ist dort eingebaut, eine Erweiterung
 braucht es nicht. Fehlt Git auf dem Rechner, bietet VS Code in der Ansicht *Quellcodeverwaltung*
@@ -41,7 +41,7 @@ Bricht `git pull` ab, weil eigene Änderungen an denselben Dateien im Weg sind: 
 Änderungen beiseitelegen), `git pull`, `git stash pop` (zurückholen). Oder `git restore .` verwirft
 die eigenen Änderungen. Neue eigene Dateien stören nicht.
 
-## Einrichten
+## Umgebung einrichten
 
 Python 3.10 oder neuer. Im Ordner dieses Repos:
 
@@ -58,7 +58,7 @@ Unter Linux und macOS aktiviert `source .venv/bin/activate`.
 
 In VS Code läuft jede Zelle (`# %%`) einzeln mit Shift+Enter. Als Interpreter `.venv` wählen.
 
-## Inhalt
+## Inhalt des Repositorys
 
 | Datei | Inhalt |
 |---|---|
@@ -75,7 +75,7 @@ In VS Code läuft jede Zelle (`# %%`) einzeln mit Shift+Enter. Als Interpreter `
 | [mbot_sim_start.py](mbot_sim_start.py) | Starter: ein mBot2-Programm unverändert am PC auf dem simulierten mBot2 laufen lassen |
 | [mbot_sim/](mbot_sim/) | Simulierter mBot2 für den PC: `cyberpi`, `mbot2`, `mbuild`, `event` ohne Gerät |
 
-## mBot2 ohne Gerät
+## mBot2 Simulation (ohne Gerät)
 
 Ein Programm für den mBot2 läuft unverändert am PC, so wie es in mBlock hochgeladen wird:
 
