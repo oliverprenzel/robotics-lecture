@@ -3,6 +3,44 @@
 Beispiele zum Nachvollziehen und Ausprobieren: Laserscans auswerten, einen Flur kartieren und
 Programme für den mBot2 ohne Gerät am PC testen.
 
+## Herunterladen und aktualisieren
+
+Am einfachsten in [VS Code](https://code.visualstudio.com/): Git ist dort eingebaut, eine Erweiterung
+braucht es nicht. Fehlt Git auf dem Rechner, bietet VS Code in der Ansicht *Quellcodeverwaltung*
+(Strg+Umschalt+G) den Download an; danach VS Code neu starten.
+
+- **Klonen:** Strg+Umschalt+P, *Git: Klonen* (*Git: Clone*), die Adresse
+  `https://github.com/oliverprenzel/robotics-lecture.git` einfügen, einen Ordner wählen. VS Code legt
+  dort den Unterordner `robotics-lecture` an und bietet an, ihn zu öffnen.
+- **Aktualisieren:** in der *Quellcodeverwaltung* über das Menü „…“ *Pull* (holt und übernimmt die
+  Änderungen) oder *Fetch* (holt nur ab); oder der Kreispfeil unten links in der Statusleiste.
+
+Dasselbe im Terminal (in VS Code: Strg+Ö), einmalig herunterladen:
+
+```powershell
+git clone https://github.com/oliverprenzel/robotics-lecture.git            # legt den Ordner robotics-lecture im aktuellen Verzeichnis an
+git clone https://github.com/oliverprenzel/robotics-lecture.git vorlesung  # oder mit eigenem Ordnernamen
+cd robotics-lecture                                                        # bzw. cd vorlesung
+```
+
+Vor jeder Vorlesung die neuesten Änderungen holen, im Ordner des Repos:
+
+```powershell
+git pull                                # holt die Änderungen und übernimmt sie in die Dateien
+```
+
+Wer erst sehen will, was neu ist, holt die Änderungen ohne sie zu übernehmen:
+
+```powershell
+git fetch                               # nur abholen, die Dateien bleiben unverändert
+git log HEAD..origin/main --oneline     # zeigt, was neu ist
+git merge                               # übernehmen (fetch + merge = pull)
+```
+
+Bricht `git pull` ab, weil eigene Änderungen an denselben Dateien im Weg sind: `git stash` (eigene
+Änderungen beiseitelegen), `git pull`, `git stash pop` (zurückholen). Oder `git restore .` verwirft
+die eigenen Änderungen. Neue eigene Dateien stören nicht.
+
 ## Einrichten
 
 Python 3.10 oder neuer. Im Ordner dieses Repos:
