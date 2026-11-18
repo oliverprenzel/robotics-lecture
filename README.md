@@ -70,7 +70,11 @@ Nach dem Aktivieren steht `(.venv)` vor der Eingabezeile. Meldet PowerShell, das
 ausgeführt werden dürfen, einmalig `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` eingeben.
 Unter Linux und macOS aktiviert `source .venv/bin/activate`.
 
-In VS Code läuft jede Zelle (`# %%`) einzeln mit Shift+Enter. Als Interpreter `.venv` wählen.
+In VS Code läuft jede Zelle (`# %%`) einzeln mit Shift+Enter. Dafür braucht VS Code die
+Erweiterungen **Python** und **Jupyter** von Microsoft: Strg+Umschalt+X, nach dem Namen suchen,
+*Installieren*. Öffnet man eine `.py`-Datei, bietet VS Code die Python-Erweiterung meist von selbst
+an. Als Interpreter `.venv` wählen (Strg+Umschalt+P, *Python: Interpreter auswählen*, oder unten
+rechts in der Statusleiste).
 
 ## Inhalt des Repositorys
 
