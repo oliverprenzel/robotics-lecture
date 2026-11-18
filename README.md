@@ -45,8 +45,9 @@ die eigenen Änderungen. Neue eigene Dateien stören nicht.
 
 Vorbedingung ist Python 3.10 oder neuer. Fehlt Python, den Installer von
 [python.org/downloads](https://www.python.org/downloads/) herunterladen und ausführen. Unter Windows
-im ersten Fenster des Installers **„Add python.exe to PATH“** anhaken. Danach ein neues Terminal öffnen
-und prüfen:
+im ersten Fenster des Installers **„Add python.exe to PATH“** anhaken. Danach **VS Code ganz schließen
+und neu starten** (ein neues Terminal in einem schon offenen VS Code kennt Python noch nicht) und im
+Terminal prüfen:
 
 ```powershell
 python --version                        # zeigt z. B. Python 3.12.7
