@@ -1,8 +1,7 @@
-# Mobile Robotik: Codebeispiele zur Vorlesung
+# Mobile Robotik: mBot2-Simulation und Codebeispiele zur Vorlesung
 
-Beispiele zum Nachvollziehen und Ausprobieren: Laserscans auswerten, einen Flur kartieren und
-Programme für den mBot2 ohne Gerät am PC testen. Das Repo wird fortlaufend aktualisiert; eigene
-Änderungen am besten in einer eigenen Kopie (Fork) machen.
+Der mBot2-Simulator ermöglicht das Entwickeln und Testen am PC ohne die mBot2-Hardware. Die Code-Beispiele zur Vorlesung sind zum Nachvollziehen und Ausprobieren, z.B. Laserscans auswerten oder einen Flur kartieren. 
+Das Repo wird fortlaufend aktualisiert; eigene Änderungen am besten in einer eigenen Kopie (Fork) machen.
 
 Erste Schritte: [Repository herunterladen und aktualisieren](#repository-code-herunterladen-und-aktualisieren)
 und [Umgebung einrichten](#umgebung-einrichten) stehen am Ende dieser Seite.
@@ -90,8 +89,7 @@ mehr mit, bis Taste z ihn wieder automatisch einstellt.
 Unten Ultraschall, Drehwinkel und Raddrehzahlen. In voller Auflösung:
 [videos/mbot_sim_linie.mp4](videos/mbot_sim_linie.mp4).*
 
-Den mBot2 mit der linken Maustaste ziehen schiebt ihn von Hand vor oder zurück, mit gedrückter
-Umschalttaste dreht man ihn; die Räder rollen dabei ab, Encoder und Gyroskop messen mit, wie beim
+Um den mBot2 "von Hand" vor oder zurück zu schieben, kann man ihn bei gedrückter linker Maustaste ziehen. Mit gedrückter Umschalttaste dreht man ihn. Die Räder rollen dabei ab, Encoder und Gyroskop messen mit, wie beim
 Testbetrieb in Labor 2. Ein Klick neben den mBot2 stößt ihn an (10°; Klick links von ihm dreht ihn nach rechts). Das
 Gyroskop misst den Stoß, die Encoder nicht. Hindernisse halten den mBot2 auf: Er bleibt stehen, die
 Räder drehen durch, und die Encoder zählen weiter. `--plot` zeigt unter der Welt den Verlauf von
@@ -135,7 +133,7 @@ git clone https://github.com/oliverprenzel/robotics-lecture.git vorlesung  # ode
 cd robotics-lecture                                                        # bzw. cd vorlesung
 ```
 
-Vor jeder Vorlesung die neuesten Änderungen holen, im Ordner des Repos:
+Neuste Änderungen im Repo holen (im Ordner des Repos):
 
 ```powershell
 git pull                                # holt die Änderungen und übernimmt sie in die Dateien

@@ -37,6 +37,7 @@ from matplotlib.patches import Polygon
 from _mbot_welt import TASTE_DAUER, UMRISS, US_BEREICH, US_KEGEL
 
 BILDRATE = 15                                  # Bilder je Sekunde (auch im Video)
+BILDRATE_BLIT = 30                             # im Fenster ohne Video (blitten_an): nur das Bewegte, daher schneller
 SPITZE = [(0.10, 0.0), (0.05, 0.03), (0.05, -0.03)]                         # Richtung, im Umriss
 RAND = 0.25                                    # m Platz um Welt und Fahrweg
 STOSS = 10.0                                   # Grad je Mausklick
@@ -147,6 +148,10 @@ class Fenster:
         self.skala = 1.0                           # Schriftmaßstab der rechten Spalte (_anordnen)
         self.ziehen = None                         # rechte Maustaste gedrückt: (x, y in Pixel, xlim, ylim)
         self.hand = None                           # mBot2 von Hand: ("schieben" | "drehen", x, y der Maus in m)
+        self.hand_maus = None                      # letzte Mausposition beim Ziehen, noch nicht angewendet
+        self.blit = False                          # Blitting: blitten_an()
+        self.k_grenzen = [None, None, None]        # y-Bereiche der Verlaufskurven (_kurven_grenzen)
+        self.k_bis = 0                             # bis hierher hat _kurven_grenzen die Werte gesehen
         self.verlauf = {"t": [], "us": [], "gyro": [], "wahr": [], "l": [], "r": []}
 
         for k in ("keymap.back", "keymap.forward", "keymap.save", "keymap.xscale", "keymap.yscale"):
@@ -327,7 +332,7 @@ class Fenster:
             return
         if self.p_bot.contains(ev)[0]:                          # auf dem mBot2: von Hand schieben oder drehen
             art = "drehen" if ev.key == "shift" else "schieben"
-            self.hand = (art, ev.xdata, ev.ydata)
+            self.hand, self.hand_maus = (art, ev.xdata, ev.ydata), None
             self.meldung, self.meldung_bis = "von Hand " + art, time.monotonic() + 1.0
             return
         x, y, th = self.welt.wahr()
@@ -339,17 +344,9 @@ class Fenster:
 
     def _bewegen(self, ev):
         """Linke Maustaste auf dem mBot2: ihn von Hand bewegen. Rechte Maustaste: die Welt verschieben."""
-        if self.hand is not None and ev.xdata is not None and ev.inaxes is self.ax:
-            art, mx, my = self.hand
-            x, y, th = self.welt.wahr()
-            if art == "schieben":                              # nur in Fahrtrichtung: Räder rollen, rutschen nicht
-                ds = (ev.xdata - mx) * math.cos(th) + (ev.ydata - my) * math.sin(th)
-                self.welt.schieben(strecke=ds)
-            else:                                              # um die Mitte der Radachse
-                dw = math.atan2(ev.ydata - y, ev.xdata - x) - math.atan2(my - y, mx - x)
-                self.welt.schieben(winkel=math.degrees((dw + math.pi) % (2 * math.pi) - math.pi))
-            self.hand = (art, ev.xdata, ev.ydata)
-            self.meldung_bis = time.monotonic() + 1.0
+        if self.hand is not None:
+            if ev.xdata is not None and ev.inaxes is self.ax:
+                self.hand_maus = (ev.xdata, ev.ydata)          # angewendet einmal je Bild (_hand_anwenden)
             return
         if self.ziehen is None or ev.x is None:
             return
@@ -361,8 +358,29 @@ class Fenster:
         self.ax.set_ylim(ya - dy, yb - dy)
         self.manuell = True
 
+    def _hand_anwenden(self):
+        """Den mBot2 bis zur letzten Mausposition bewegen. Einmal je Bild statt bei jedem Mausereignis:
+        sonst stauen sich die Ereignisse, während das Fenster zeichnet, und der mBot2 läuft hinterher."""
+        if self.hand is None or self.hand_maus is None:
+            return
+        art, mx, my = self.hand
+        nx, ny = self.hand_maus
+        if (nx, ny) == (mx, my):
+            return
+        x, y, th = self.welt.wahr()
+        if art == "schieben":                                  # nur in Fahrtrichtung: Räder rollen, rutschen nicht
+            self.welt.schieben(strecke=(nx - mx) * math.cos(th) + (ny - my) * math.sin(th))
+        elif math.hypot(nx - x, ny - y) > 0.01:                # um die Mitte der Radachse, der gegriffene Punkt folgt der Maus
+            dw = math.atan2(ny - y, nx - x) - math.atan2(my - y, mx - x)
+            self.welt.schieben(winkel=math.degrees((dw + math.pi) % (2 * math.pi) - math.pi))
+        else:
+            return                                             # zu nah an der Drehachse: Winkel unsicher, Bezug behalten
+        self.hand = (art, nx, ny)
+        self.meldung_bis = time.monotonic() + 1.0
+
     def _loslassen(self, ev):
-        self.ziehen = self.hand = None
+        self._hand_anwenden()
+        self.ziehen = self.hand = self.hand_maus = None
         leiste = getattr(self.fig.canvas, "toolbar", None)
         if ev.inaxes is self.ax and leiste is not None and getattr(leiste, "mode", ""):
             self.manuell = True                    # mit Lupe oder Kreuz der Werkzeugleiste gezoomt/verschoben
@@ -386,6 +404,7 @@ class Fenster:
     # ---------------------------------------------------------------- Zeichnen
     def zeichnen(self):
         w = self.welt
+        self._hand_anwenden()
         echo = w.echo()                            # ruft weiter(): die Welt läuft auch, während das Programm schläft
         quad = w.auf_linie()
         with w.lock:
@@ -466,20 +485,76 @@ class Fenster:
             self.k_wahr.set_data(v["t"], v["wahr"])
             self.k_l.set_data(v["t"], v["l"])
             self.k_r.set_data(v["t"], v["r"])
+            if self.hand is None or self.k_grenzen[0] is None:
+                self._kurven_grenzen(t)        # beim Ziehen nicht: jedes Wachsen zeichnet alles neu und ruckelt
+
+    def _kurven_grenzen(self, t):
+        """Achsen der Verlaufskurven in Stufen erweitern, nie verkleinern: jede Änderung der Achsen
+        zeichnet das ganze Fenster neu (teuer), sonst zeichnet das Blitting nur die Kurven."""
+        v, g = self.verlauf, self.k_grenzen
+        k0, self.k_bis = self.k_bis, len(v["t"])   # alle Werte seit dem letzten Mal (beim Ziehen ausgesetzt)
+        if t > self.k_achsen[0].get_xlim()[1] or g[0] is None:
             for a in self.k_achsen:
-                a.set_autoscale_on(True)               # set_ylim unten schaltet es sonst dauerhaft ab
-                a.relim()
-                a.autoscale_view()
-            for a, mindest in ((self.k_achsen[0], 20.0), (self.k_achsen[1], 10.0), (self.k_achsen[2], 10.0)):
-                lo, hi = a.get_ylim()                  # sonst zeigt ein ruhendes Signal Rauschen im µ-Bereich
-                if hi - lo < mindest:
-                    m = (hi + lo) / 2
-                    a.set_ylim(m - mindest / 2, m + mindest / 2)
-            lo, hi = self.k_achsen[0].get_ylim()       # Abstand ab 0, sonst wirkt ein ruhiger Wert wie Rauschen
-            self.k_achsen[0].set_ylim(0, max(hi, 50.0))
-            if len(v["t"]) < 2:
-                for a in self.k_achsen:
-                    a.set_xlim(0, max(1.0, t))
+                a.set_xlim(0, max(10.0, math.ceil(t * 1.5 / 10) * 10))
+        u = max(v["us"][k0:])                          # Abstand ab 0, sonst wirkt ein ruhiger Wert wie Rauschen
+        if g[0] is None or u > g[0][1]:
+            g[0] = (0.0, max(50.0, 1.2 * u))
+            self.k_achsen[0].set_ylim(*g[0])
+        for i, werte, mindest in ((1, v["gyro"][k0:] + v["wahr"][k0:], 10.0), (2, v["l"][k0:] + v["r"][k0:], 10.0)):
+            lo, hi = min(werte), max(werte)
+            if g[i] is None:                       # Mindesthöhe: sonst zeigt ein ruhendes Signal Rauschen im µ-Bereich
+                m = (lo + hi) / 2
+                g[i] = (min(lo, m - mindest / 2), max(hi, m + mindest / 2))
+            elif lo < g[i][0] or hi > g[i][1]:
+                lo, hi = min(lo, g[i][0]), max(hi, g[i][1])
+                rand = 0.5 * (hi - lo)             # gleich viel Luft, damit es nicht bei jedem Bild wächst
+                g[i] = (lo - rand if lo < g[i][0] else lo, hi + rand if hi > g[i][1] else hi)
+            else:
+                continue
+            self.k_achsen[i].set_ylim(*g[i])
+
+    def blitten_an(self):
+        """Nur die bewegten Teile je Bild neu zeichnen (Blitting): mBot2, Spuren, Ultraschall, Texte.
+        Achsen, Gitter, Hindernisse und Hinweise zeichnet matplotlib nur neu, wenn sich dort etwas
+        ändert (Ausschnitt, Fenstergröße, Thema, Achsen der Verlaufskurven); sonst schafft das Fenster kaum
+        10 Bilder/s, und der mBot2 folgt der Maus nur ruckelnd. Nicht beim Video: dort zählt das ganze Bild."""
+        self.dyn = [self.l_spur, self.p_bot, self.p_rich, self.l_rad, self.l_us, self.l_quad,
+                    self.t_info, self.p_led, self.t_anzeige]
+        if self.pose_fn is not None:
+            self.dyn += [self.l_spur_ber, self.p_ber, self.p_rich_ber]
+        if self.plot:
+            self.dyn += [self.k_us, self.k_gyro, self.k_wahr, self.k_l, self.k_r]
+        for a in self.dyn:
+            a.set_animated(True)                   # nicht mehr Teil des normalen Zeichnens
+        self._grund = None
+        self.fig.canvas.mpl_connect("draw_event", self._nach_zeichnen)
+        self.blit = True
+
+    def blitten_aus(self):
+        for a in getattr(self, "dyn", []):
+            a.set_animated(False)
+        self.blit = False
+
+    def _nach_zeichnen(self, ev):
+        """Nach jedem vollen Zeichnen (auch Zoom, Größe, Werkzeugleiste): Hintergrund merken, Bewegtes darauf."""
+        if not hasattr(self.fig.canvas, "copy_from_bbox"):
+            return                                 # Fenster schon geschlossen
+        self._grund = self.fig.canvas.copy_from_bbox(self.fig.bbox)
+        for a in self.dyn:
+            a.axes.draw_artist(a)
+
+    def auffrischen(self):
+        """Bild auf den Bildschirm: voll, wenn sich im Hintergrund etwas geändert hat, sonst nur das Bewegte."""
+        if not self.blit:
+            return                                 # plt.pause zeichnet
+        c = self.fig.canvas
+        if self.fig.stale or self._grund is None:
+            c.draw()                               # löst _nach_zeichnen aus
+        else:
+            c.restore_region(self._grund)
+            for a in self.dyn:
+                a.axes.draw_artist(a)
+            c.blit(self.fig.bbox)
 
     def _anordnen(self):
         """Rechte Spalte an die Fenstergröße anpassen: Pose-Text oben, darunter LED und CyberPi-Anzeige,
@@ -622,6 +697,8 @@ def zeigen(welt, ziel=None, pose=None, titel="mBot2, simuliert", plot=False, vid
         thread.mbot_lauf = welt.lauf               # damit stop_all() und das Schließen es beenden
         thread.start()
     interaktiv = matplotlib.get_backend().lower() not in NICHT_INTERAKTIV
+    if interaktiv and film is None and getattr(f.fig.canvas, "supports_blit", False):
+        f.blitten_an()
     try:
         while plt.fignum_exists(f.fig.number):
             t_bild = time.monotonic()
@@ -637,7 +714,12 @@ def zeigen(welt, ziel=None, pose=None, titel="mBot2, simuliert", plot=False, vid
                 film.bild(f.fig)
             if not interaktiv and (thread is None or not thread.is_alive()):
                 break
-            plt.pause(max(0.001, 1.0 / BILDRATE - (time.monotonic() - t_bild)))   # Zeichenzeit abziehen
+            f.auffrischen()
+            warten = max(0.001, 1.0 / (BILDRATE_BLIT if f.blit else BILDRATE) - (time.monotonic() - t_bild))   # Zeichenzeit abziehen
+            if f.blit and getattr(f, "_fokus", False):
+                f.fig.canvas.start_event_loop(warten)   # plt.pause zeichnete über show() jedes Mal alles neu
+            else:
+                plt.pause(warten)
             if not getattr(f, "_fokus", False):
                 f._fokus = True
                 _nach_vorn(f.fig)                  # Tasten sollen ins Fenster gehen, nicht ins Terminal
@@ -653,6 +735,7 @@ def zeigen(welt, ziel=None, pose=None, titel="mBot2, simuliert", plot=False, vid
     if film is not None:
         film.schliessen()
     if bild:
+        f.blitten_aus()                            # savefig zeichnet nur, was nicht animiert ist
         f.zeichnen()
         f.fig.savefig(bild, dpi=100, facecolor=f.fig.get_facecolor())
         print(f"Bild: {bild}")

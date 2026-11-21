@@ -123,12 +123,16 @@ class Welt:
                 self.rotation["z"] += (self.gyro_skala * math.degrees(self.w) + self.drift) * h
 
     def _beruehrt(self, pose):
-        """Überlappt der Umriss in dieser Pose ein Hindernis? (Ecken in Polygonen, beide Richtungen)"""
+        """Überlappt der Umriss in dieser Pose ein Hindernis? (Ecken in Polygonen, beide Richtungen,
+        und sich kreuzende Kanten, etwa bei einer dünnen Wand quer über den mBot)"""
         x, y, th = pose
         c, s = math.cos(th), math.sin(th)
         ecken = [(x + c * px - s * py, y + s * px + c * py) for px, py in UMRISS]
         for poly in self.hindernisse:
             if any(_innen(e, poly) for e in ecken) or any(_innen(q, ecken) for q in poly):
+                return True
+            if any(_kreuzen(ecken[i - 1], ecken[i], poly[j - 1], poly[j])
+                   for i in range(len(ecken)) for j in range(len(poly))):
                 return True
         return False
 
@@ -144,22 +148,28 @@ class Welt:
     def schieben(self, strecke=0.0, winkel=0.0):
         """Von Hand schieben oder drehen: um strecke [m] in Fahrtrichtung und winkel [Grad] um die Mitte
         der Radachse, die Räder rollen dabei ab. Anders als beim Stoß zählen die Encoder mit (je Rad
-        der eigene Weg), und der Gyro misst die Drehung. An einem Hindernis geht es nicht weiter."""
+        der eigene Weg), und der Gyro misst die Drehung. An einem Hindernis bleibt er stehen: in
+        Teilschritten von höchstens 5 mm und 2°, damit er auch bei schneller Maus nicht hindurchspringt.
+        Gibt zurück, ob der ganze Weg frei war."""
         self.weiter()
+        n = max(1, math.ceil(abs(strecke) / 0.005), math.ceil(abs(winkel) / 2.0))
+        ds, dw = strecke / n, winkel / n
+        dth = math.radians(dw)
+        s_l, s_r = ds - dth * self.b / 2, ds + dth * self.b / 2
         with self.lock:
-            dth = math.radians(winkel)
-            x, y, th = self.pose
-            m_ = th + dth / 2
-            neu = [x + strecke * math.cos(m_), y + strecke * math.sin(m_), th + dth]
-            if self.kollision and self._beruehrt(neu):
-                return False
-            if not self.aufgebockt:
-                self.pose = neu
-            s_l, s_r = strecke - dth * self.b / 2, strecke + dth * self.b / 2
-            self.winkel["EM1"] += math.degrees(s_l / self.r_true)
-            self.winkel["EM2"] -= math.degrees(s_r / self.r_rechts)      # EM2 spiegelbildlich eingebaut
-            if not self.aufgebockt:
-                self.rotation["z"] += self.gyro_skala * winkel
+            for _ in range(n):
+                if not self.aufgebockt:
+                    x, y, th = self.pose
+                    m_ = th + dth / 2
+                    neu = [x + ds * math.cos(m_), y + ds * math.sin(m_), th + dth]
+                    if self.kollision and self._beruehrt(neu):
+                        self.kollidiert = True
+                        return False
+                    self.pose = neu
+                    self.rotation["z"] += self.gyro_skala * dw
+                self.winkel["EM1"] += math.degrees(s_l / self.r_true)
+                self.winkel["EM2"] -= math.degrees(s_r / self.r_rechts)      # EM2 spiegelbildlich eingebaut
+            self.kollidiert = False
             return True
 
     def ruf(self, name, *args):
@@ -280,6 +290,13 @@ def _innen(p, poly):
         if (y0 > y) != (y1 > y) and x < x0 + (y - y0) * (x1 - x0) / (y1 - y0):
             drin = not drin
     return drin
+
+
+def _kreuzen(a, b, c, d):
+    """Schneiden sich die Strecken a-b und c-d (echt, ohne bloßes Berühren)?"""
+    def seite(p, q, r):
+        return (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0])
+    return seite(a, b, c) * seite(a, b, d) < 0 and seite(c, d, a) * seite(c, d, b) < 0
 
 
 def _strecke(px, py, a, b):
