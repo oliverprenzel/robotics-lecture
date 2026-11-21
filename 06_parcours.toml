@@ -1,0 +1,24 @@
+# Szene fuer den simulierten mBot2: Rundkurs aus Klebeband mit einer Kiste auf der Strecke.
+# Gehoert zu 06_mbot_linie_folgen.py:
+#
+#     python mbot_sim_start.py 06_mbot_linie_folgen.py --welt 06_parcours.toml --plot
+#
+# Koordinaten in Metern, Ursprung an der Radachse des mBot2 beim Start, x in Fahrtrichtung,
+# y nach links. Das Format steht in mbot_sim/szenen.py; Kiste und Linie lassen sich hier
+# verschieben, ohne das Programm zu aendern.
+
+name = "Rundkurs mit Kiste"
+start = [0.0, 0.0, 0.0]                  # wahre Startpose: x, y in m, Winkel in Grad
+
+[[linie]]                                # Klebeband, 19 mm breit, als geschlossener Streckenzug
+punkte = [[-0.1, 0.0], [0.9, 0.0], [1.15, 0.15], [1.2, 0.35], [1.15, 0.55], [0.9, 0.7],
+          [-0.1, 0.7], [-0.35, 0.55], [-0.4, 0.35], [-0.35, 0.15]]
+geschlossen = true
+
+[[hindernis]]
+name = "Kiste"
+rechteck = [0.20, 0.62, 0.32, 0.78]      # x0, y0, x1, y1: auf der oberen Geraden
+
+[[ziel]]
+punkt = [0.9, 0.0]
+name = "Kurve"

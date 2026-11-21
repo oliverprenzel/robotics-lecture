@@ -1,3 +1,5 @@
 numpy
 matplotlib
+imageio-ffmpeg        # nur für Videos aus der mBot2-Simulation (mbot_sim_start.py --video)
 ipykernel             # Zellen (# %%) im Interactive Window von VS Code
+tomli; python_version < "3.11"   # Szenendateien (.toml) für die mBot2-Simulation, ab Python 3.11 eingebaut

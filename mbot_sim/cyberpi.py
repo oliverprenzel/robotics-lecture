@@ -125,10 +125,18 @@ class _Display:
 
     def show_label(self, message, fontsize=16, x=0, y=0, index=0):
         WELT.ruf("display.show_label", message, fontsize, x, y, index)
+        self._merken(message, index)
         print("[CyberPi] " + str(message))
+
+    def _merken(self, message, index=0):
+        """Text für das Fenster (WELT.fenster) merken."""
+        with WELT.lock:
+            WELT.labels[index] = str(message)
 
     def clear(self):
         WELT.ruf("display.clear")
+        with WELT.lock:
+            WELT.labels = {}
 
 
 display = _Display()

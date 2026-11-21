@@ -34,6 +34,8 @@ def normiere(winkel):
     return (winkel + math.pi) % (2 * math.pi) - math.pi
 
 # ---- Positionsbestimmung (vorgegeben) ----
+# Pose in m und rad. Am PC zeichnet die Simulation sie mit --pose gestrichelt ins Fenster;
+# x, y, theta sind dafuer die Standardnamen. Andere Namen dort angeben, z. B. --pose px,py,kurs
 x, y, theta = 0.0, 0.0, 0.0
 cyberpi.reset_rotation("all")
 phi_l_alt, phi_r_alt = encoder_winkel()

@@ -5,9 +5,11 @@
 # Diese Datei ist das Programm fuer den mBot2, so wie es in mBlock hochgeladen wird.
 # Am PC laeuft sie unveraendert auf dem simulierten mBot2:
 #
-#     python mbot_sim_start.py 04_mbot_strecke_fahren.py
+#     python mbot_sim_start.py 04_mbot_strecke_fahren.py          # nur Konsole
+#     python mbot_sim_start.py 04_mbot_strecke_fahren.py --gui    # mit Fenster
 #
-# Das Programm wartet auf die Taste A, am PC ist das die Taste a im Terminal (Windows).
+# Das Programm wartet auf die Taste A. Am PC ist das die Taste a: ohne Fenster im Terminal
+# (nur Windows), mit Fenster im Fenster der Simulation.
 # Die Fahrt dauert etwa 7 Sekunden. Am Ende nennt der Starter die wahre Strecke: Der simulierte
 # mBot2 hat ein Rad, das 1 % groesser ist als angenommen. Die Encoder merken davon nichts.
 #
