@@ -17,7 +17,7 @@ gedrückter Umschalttaste dreht es ihn um die Mitte der Radachse; die Räder rol
 und Gyroskop messen mit (Testbetrieb, Labor 2). Ein Klick neben den mBot2 stößt ihn an: Klick links von ihm dreht ihn um 10° nach
 rechts, Klick rechts um 10° nach links; das Gyroskop misst den Stoß, die Encoder nicht. Taste d
 schaltet zwischen dunkler (Standard) und heller Darstellung um. Mausrad: zoomen um die Mausposition,
-rechte (oder mittlere) Maustaste gedrückt halten: Welt verschieben; danach läuft der Ausschnitt nicht
+rechte (oder mittlere) Maustaste gedrückt halten: Ansicht verschieben; danach läuft der Ausschnitt nicht
 mehr automatisch mit, bis Taste z ihn wieder freigibt.
 
 Das Fenster läuft im Hauptthread (matplotlib verlangt das), das mBot2-Programm in einem eigenen
@@ -215,7 +215,7 @@ class Fenster:
                                         bbox=dict(boxstyle="round"))
         self.t_hinweis = self.info.text(
             0.0, 0.02, "mBot2, linke Maustaste:\n  auf mBot2 ziehen: schieben\n  dazu Umschalt: drehen\n"
-            "  Klick daneben: Stoß 10°\nAnsicht:\n  rechte Maustaste: verschieben\n  Mausrad: zoomen\n"
+            "  Klick daneben: Stoß 10°\nAnsicht:\n  rechte Maustaste halten: verschieben\n  Mausrad: zoomen\n"
             "  %s: automatisch\n  %s: hell / dunkel\nCyberPi: Tasten a b, Pfeile,\n  m (Joystick Mitte)\n"
             "Fenster schließen: Ende" % (ANSICHT_TASTE, THEMA_TASTE),
             va="bottom", ha="left", fontsize=8.5, transform=self.info.transAxes)

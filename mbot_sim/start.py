@@ -10,10 +10,10 @@
     python mbot_sim_start.py PROGRAMM.py --video fahrt.mp4 --bild fahrt.png   # Lauf aufzeichnen
 
 Die Programmdatei bleibt, wie sie auf den mBot2 geladen wird: `cyberpi`, `mbot2`, `mbuild` und
-`event` kommen hier aus mbot_sim. Die Tasten des CyberPi sind die Tasten a, b, m und die
-Pfeiltasten im Terminal (nur Windows). Die Anzeige erscheint in der Konsole, höchstens zweimal
-je Sekunde. Am Ende, oder nach Ctrl+C, steht die wahre Position des simulierten mBot2 da:
-Die Simulation kennt sie, am echten mBot2 misst das Maßband.
+`event` kommen hier aus mbot_sim. Die Tasten des CyberPi: a und b, die Pfeiltasten als Joystick,
+m oder Enter als Joystick-Mitte; ohne Fenster im Terminal (nur Windows). Die Anzeige erscheint
+in der Konsole, höchstens zweimal je Sekunde. Am Ende, oder nach Ctrl+C, steht die wahre
+Position des simulierten mBot2 da: Die Simulation kennt sie, am echten mBot2 misst das Maßband.
 
 Mit --gui zeigt ein Fenster (fenster.py) die Welt von oben; die Tasten des CyberPi sind dann die
 Tasten a, b, m und die Pfeile im Fenster, auf jedem System. --pose liest dazu während der Fahrt die
