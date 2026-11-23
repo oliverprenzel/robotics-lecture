@@ -21,6 +21,37 @@ def _ports(port):
     return (p,)
 
 
+# Kennlinie Leistung -> Drehzahl ohne Regelung (EM_set_power, drive_power), Drehzahl =
+# steigung * (|Leistung| - null) in U/min. Aus dem Stand läuft der Motor erst ab "an" an (Haftreibung;
+# vorwärts und rückwärts bezogen auf den mBot2), dreht er schon, bleibt er erst unter "aus" stehen.
+# Die Werte hier sind ANGENOMMEN (plausibel, nicht gemessen): Wie der echte mBot2 sich verhält,
+# misst man selbst. Eigene Messwerte: Datei _kennlinie_privat.py neben dieser anlegen,
+# mit einem Dict KENNLINIE wie unten; sie ersetzt dann diese Werte.
+KENNLINIE = {
+    "boden":      dict(steigung=2.4, null=5.0, an_vor=7.0, an_rueck=7.0, aus=6.0),
+    "aufgebockt": dict(steigung=2.4, null=4.0, an_vor=6.0, an_rueck=6.0, aus=5.0),
+}
+try:
+    from _kennlinie_privat import KENNLINIE          # gemessene Werte, falls vorhanden
+except ImportError:
+    pass
+
+
+def _leistung(port, power):
+    p = max(-100.0, min(100.0, float(power)))
+    WELT.weiter()
+    with WELT.lock:
+        k = KENNLINIE["aufgebockt" if WELT.aufgebockt else "boden"]
+        for m in _ports(port):
+            vor = (p > 0) == (m == "EM1")                  # EM2 spiegelbildlich: negative Leistung = vorwärts
+            if abs(WELT.rpm[m]) > 2.0:
+                schwelle = k["aus"]
+            else:
+                schwelle = k["an_vor"] if vor else k["an_rueck"]
+            rpm = 0.0 if abs(p) < schwelle else k["steigung"] * (abs(p) - k["null"])
+            WELT.soll[m] = rpm if p >= 0 else -rpm
+
+
 def _setzen(port, rpm):
     WELT.weiter()
     with WELT.lock:
@@ -33,6 +64,13 @@ def EM_set_speed(speed, port="ALL"):
     """Drehzahl [U/min], im Drehsinn des Motors."""
     WELT.ruf("EM_set_speed", speed, port)
     _setzen(port, speed)
+
+
+def EM_set_power(power, port="ALL"):
+    """Leistung [-100..100 %] ohne Drehzahlregelung, im Drehsinn des Motors. Die Drehzahl folgt
+    der Kennlinie oben (KENNLINIE): Totzone mit Haftreibung, darüber linear."""
+    WELT.ruf("EM_set_power", power, port)
+    _leistung(port, power)
 
 
 def EM_get_speed(port):
@@ -69,6 +107,13 @@ def drive_speed(EM1_speed, EM2_speed):
     WELT.ruf("drive_speed", EM1_speed, EM2_speed)
     _setzen("EM1", EM1_speed)
     _setzen("EM2", EM2_speed)
+
+
+def drive_power(EM1_power, EM2_power):
+    """Leistung beider Motoren [-100..100 %], ohne Drehzahlregelung (siehe EM_set_power)."""
+    WELT.ruf("drive_power", EM1_power, EM2_power)
+    _leistung("EM1", EM1_power)
+    _leistung("EM2", EM2_power)
 
 
 def forward(speed=50):

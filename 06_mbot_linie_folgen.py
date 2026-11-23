@@ -12,7 +12,7 @@
 # entsprechend lenkt der mBot2 nach (P-Regler). Sieht keine Sonde das Band, dreht er in die
 # Richtung, in der er es zuletzt gesehen hat. Der Ultraschallsensor stoppt ihn vor der Kiste.
 #
-# Taste A startet, Taste B haelt an. Pfeil hoch/runter vor dem Start: Geschwindigkeit.
+# Taste B startet, Taste A haelt an. Pfeil hoch/runter vor dem Start: Geschwindigkeit.
 # Zum Ausprobieren: K groesser oder kleiner, V schneller, die Kiste in 06_parcours.toml verschieben.
 #
 # Ohne Umlaute und ohne f-Strings, damit die Datei auf dem CyberPi (MicroPython) laeuft.
@@ -37,21 +37,21 @@ def linie():
 
 # ---- Start ----
 cyberpi.led.on(0, 0, 255)
-while not cyberpi.controller.is_press("a"):
+while not cyberpi.controller.is_press("b"):
     if cyberpi.controller.is_press("up"):
         V = min(50, V + 5)
         time.sleep(0.3)
     if cyberpi.controller.is_press("down"):
         V = max(10, V - 5)
         time.sleep(0.3)
-    cyberpi.display.show_label("Linie folgen\nV = %d U/min\nhoch/runter\nTaste A: Start" % V, 16, 0, 0)
+    cyberpi.display.show_label("Linie folgen\nV = %d U/min\nhoch/runter\nTaste B: Start" % V, 16, 0, 0)
     time.sleep(0.05)
 
 # ---- Linie folgen ----
 cyberpi.led.on(0, 255, 0)
 letzte = 0                        # Ablage beim letzten Mal, als eine Sonde das Band sah
-grund = "Taste B"
-while not cyberpi.controller.is_press("b"):
+grund = "Taste A"
+while not cyberpi.controller.is_press("a"):
     abstand = mbuild.ultrasonic2.get(1)
     if abstand < ABSTAND:
         grund = "Hindernis %d cm" % abstand

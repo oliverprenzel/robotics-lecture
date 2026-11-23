@@ -8,7 +8,7 @@
 #     python mbot_sim_start.py 04_mbot_strecke_fahren.py          # nur Konsole
 #     python mbot_sim_start.py 04_mbot_strecke_fahren.py --gui    # mit Fenster
 #
-# Das Programm wartet auf die Taste A. Am PC ist das die Taste a: ohne Fenster im Terminal
+# Das Programm wartet auf die Taste B. Am PC ist das die Taste b: ohne Fenster im Terminal
 # (nur Windows), mit Fenster im Fenster der Simulation.
 # Die Fahrt dauert etwa 7 Sekunden. Am Ende nennt der Starter die wahre Strecke: Der simulierte
 # mBot2 hat ein Rad, das 1 % groesser ist als angenommen. Die Encoder merken davon nichts.
@@ -20,8 +20,8 @@ D = 6.5                                    # Raddurchmesser in cm
 S = 100.0                                  # Soll-Strecke in cm
 ziel = S * 360 / (math.pi * D)             # Drehwinkel des Rades in Grad fuer die Strecke S
 
-cyberpi.display.show_label("Taste A druecken", 16, 0, 0)
-while not cyberpi.controller.is_press("a"):
+cyberpi.display.show_label("Taste B druecken", 16, 0, 0)
+while not cyberpi.controller.is_press("b"):
     pass
 
 cyberpi.display.show_label("Ziel: " + str(round(ziel)) + " Grad", 16, 0, 0)

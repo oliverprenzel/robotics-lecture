@@ -25,12 +25,11 @@ US_FEHLER = 0.05              # ±5 % (Datenblatt) -> 1 sigma ~2,5 %
 UMRISS = [(-0.06, -0.065), (0.11, -0.065), (0.11, 0.065), (-0.06, 0.065)]   # m, ungefähr, Radachse im Ursprung
 US_KEGEL = 8.0                # Grad, halber Öffnungswinkel (Annahme)
 
-# Typische Fehler eines echten mBot2 für Labor 2 (Koppelnavigation), Annahmen bis auf die Drift:
+# Typische Fehler eines echten mBot2 für Labor 2 (Koppelnavigation), Annahmen:
 # rechtes Rad 1 % größer als das linke, wahrer Radradius 1 % größer als eingetragen, wirksame
-# Spurweite beim Drehen 2 % größer (Schlupf), Gyro 0,5 % Maßstabsfehler, 0,1 °/min Drift
-# (am mBot2 gemessen: höchstens 0,1 °/min, der CyberPi gleicht sie vermutlich selbst aus)
+# Spurweite beim Drehen 2 % größer (Schlupf), Gyro 0,5 % Maßstabsfehler, keine Drift
 REALISTISCH = dict(radius_fehler=0.01, rad_ungleich=0.01, spur_fehler=0.02, gyro_skala=0.995,
-                   rotation_drift=0.1 / 60)
+                   rotation_drift=0.0)
 
 
 class Welt:

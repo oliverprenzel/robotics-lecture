@@ -5,11 +5,13 @@ N = 20                                   # Messwerte pro Abstand
 def warte(taste):
     while not cyberpi.controller.is_press(taste):
         time.sleep(0.05)
+    while cyberpi.controller.is_press(taste):
+        time.sleep(0.05)                 # erst loslassen, sonst zaehlt der Druck doppelt
     time.sleep(0.3)                      # Taste entprellen
 
 while True:
-    cyberpi.display.show_label("Abstand einstellen\nTaste A = messen", 16, 0, 0)
-    warte("a")
+    cyberpi.display.show_label("Abstand einstellen\nTaste B = messen", 16, 0, 0)
+    warte("b")
     
     # leere Liste anlegen
     werte = []    

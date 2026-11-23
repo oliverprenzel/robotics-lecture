@@ -19,25 +19,31 @@ def _achse(axis):
 
 
 # ---------------------------------------------------------------- Bewegungssensor (Gyro, Beschleunigung)
+# Auflösung wie am Gerät: Drehrate und Drehwinkel in ganzen Grad, Beschleunigung mit einer Nachkommastelle.
+# Gerundet ist eine Annahme (am Gerät abgelesen sind nur die Stufen): hier auf int ändern, falls abgeschnitten wird.
+def _ganz(v):
+    return int(round(v))
+
+
 def get_gyro(axis):
-    """Drehrate [Grad/s]; z: links herum positiv (Annahme, am Gerät prüfen: vz_gyro)."""
+    """Drehrate [Grad/s], ganzzahlig; z: links herum positiv (Annahme, am Gerät prüfen: vz_gyro)."""
     a = _achse(axis)
     WELT.ruf("get_gyro", a)
     WELT.weiter()
     with WELT.lock:
         if a != "z":
-            return WELT.rnd.gauss(0.0, WELT.rauschen)
+            return _ganz(WELT.rnd.gauss(0.0, WELT.rauschen))
         import math
-        return WELT.gyro_skala * math.degrees(WELT.w) + WELT.bias + WELT.rnd.gauss(0.0, WELT.rauschen)
+        return _ganz(WELT.gyro_skala * math.degrees(WELT.w) + WELT.bias + WELT.rnd.gauss(0.0, WELT.rauschen))
 
 
 def get_rotation(axis):
-    """Aufsummierter Drehwinkel [Grad] seit reset_rotation, mit Maßstabsfehler und Drift (rotation_drift)."""
+    """Aufsummierter Drehwinkel [Grad, ganzzahlig] seit reset_rotation, mit Maßstabsfehler und Drift (rotation_drift)."""
     a = _achse(axis)
     WELT.ruf("get_rotation", a)
     WELT.weiter()
     with WELT.lock:
-        return WELT.rotation[a]
+        return _ganz(WELT.rotation[a])
 
 
 def reset_rotation(axis="all"):
@@ -48,11 +54,11 @@ def reset_rotation(axis="all"):
 
 
 def get_acc(axis):
-    """Beschleunigung [m/s^2]; z: Erdschwere."""
+    """Beschleunigung [m/s^2], eine Nachkommastelle; z: Erdschwere."""
     a = _achse(axis)
     WELT.ruf("get_acc", a)
     with WELT.lock:
-        return (9.81 if a == "z" else 0.0) + WELT.rnd.gauss(0.0, 0.02)
+        return round((9.81 if a == "z" else 0.0) + WELT.rnd.gauss(0.0, 0.02), 1)
 
 
 def get_yaw():

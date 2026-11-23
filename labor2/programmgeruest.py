@@ -28,10 +28,14 @@ def setze_raeder(v_l, v_r):
     mbot2.EM_set_speed(v_l, 1)
     mbot2.EM_set_speed(-v_r, 2)
 
-# ---- Hilfsfunktion ----
+# ---- Hilfsfunktionen ----
 def normiere(winkel):
     # Winkel in rad auf den Bereich -pi bis +pi abbilden
     return (winkel + math.pi) % (2 * math.pi) - math.pi
+
+def begrenze(wert, grenze):
+    # Wert auf den Bereich -grenze bis +grenze beschraenken
+    return max(-grenze, min(grenze, wert))
 
 # ---- Positionsbestimmung (vorgegeben) ----
 # Pose in m und rad. Am PC zeichnet die Simulation sie mit --pose gestrichelt ins Fenster;
@@ -58,6 +62,20 @@ def schritt():
     y += ds * math.sin(theta_mittel)
     theta = theta_neu
 
+# ---- Anhalten (vorgegeben): am Ende jeder Fahrfunktion aufrufen ----
+def anhalten():
+    # Motoren stoppen und die Pose fortschreiben, bis beide Raeder stehen: drei Schleifen
+    # hintereinander keine Aenderung der Encoderwinkel, hoechstens 20 Schleifen (etwa 1 s)
+    setze_raeder(0, 0)
+    ruhig = 0
+    for _ in range(20):
+        alt = encoder_winkel()
+        time.sleep(DT)
+        schritt()
+        ruhig = ruhig + 1 if encoder_winkel() == alt else 0
+        if ruhig == 3:
+            break
+
 # ---- Fahrfunktionen: von Ihnen zu ergaenzen ----
 def drehe_auf(theta_soll):
     # Termin 5: auf der Stelle drehen, bis |normiere(theta_soll - theta)| < Toleranz
@@ -77,6 +95,6 @@ while True:
     # Pose und Radwinkel (L, R: Encoderwinkel links und rechts in Grad, Aufgabe 5.1)
     print("{:.3f};{:.3f};{:.1f};{};{}".format(x, y, math.degrees(theta), phi_l_alt, phi_r_alt))
     # print sieht man nur am PC; im Hochlade-Modus die Werte auf dem Display ablesen
-    cyberpi.display.show_label("x={:.2f} y={:.2f}\nth={:.0f}\nL={} R={}".format(
+    cyberpi.display.show_label("x={:.2f} y={:.2f}\nth={:.1f}\nL={} R={}".format(
         x, y, math.degrees(theta), phi_l_alt, phi_r_alt), 16, 0, 0)
     time.sleep(DT)

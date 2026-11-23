@@ -70,6 +70,11 @@ def main(argv=None):
     welt.konfigurieren(hindernisse=hindernisse, tastatur=True, aufgebockt=a.aufgebockt, protokoll=True,
                        kollision=True, **szene, **modell)         # protokoll: cyberpi.console auch in der Konsole zeigen
 
+    if not hasattr(time, "ticks_ms"):             # MicroPython-Uhr, die es am PC nicht gibt
+        time.ticks_ms = lambda: int(time.monotonic() * 1000)
+        time.ticks_diff = lambda neu, alt: neu - alt
+        time.ticks_add = lambda t, d: t + d
+
     zeigen = cyberpi.display.show_label
     gezeigt, offen = [0.0, None], [None]          # eine Schleife mit 20 Hz soll die Konsole nicht fluten
 
