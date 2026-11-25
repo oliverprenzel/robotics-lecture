@@ -167,19 +167,54 @@ python --version                        # zeigt z. B. Python 3.12.7
 ausführen und *Modify* oder *Repair* wählen, oder unter *Einstellungen → Apps → Erweiterte
 App-Einstellungen → App-Ausführungsaliase* die Einträge für `python.exe` ausschalten.
 
-Dann im Ordner dieses Repos:
-(Befehle einzeln ausführen, um auf Fehler reagieren zu können)
+Dann im Ordner dieses Repos, **Schritt für Schritt**: jeden Befehl einzeln eingeben und die Prüfung
+darunter abwarten, erst dann den nächsten Schritt. Unter Linux und macOS steht `.venv/bin/` statt
+`.venv\Scripts\`.
+
+**1. Eigene Python-Umgebung anlegen** (einmalig)
 
 ```powershell
-python -m venv .venv                    # einmalig: eigene Python-Umgebung anlegen
-.venv\Scripts\Activate.ps1              # in jedem neuen Terminal: Umgebung aktivieren
-pip install -r requirements.txt         # einmalig: Pakete installieren
+python -m venv .venv
+```
+
+Prüfen: keine Fehlermeldung, und im Repo-Ordner gibt es jetzt den Ordner `.venv`.
+
+**2. Umgebung aktivieren** (in jedem neuen Terminal)
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Prüfen: Vor der Eingabezeile steht jetzt grün `(.venv)`.
+
+![Eingabezeile mit grünem (.venv) bei aktiver Umgebung, darunter ohne](bilder/venv_aktiv.svg)
+
+Fehlt `(.venv)`, nicht weitermachen. Meldet PowerShell, dass Skripte nicht ausgeführt werden dürfen,
+einmalig `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` eingeben und Schritt 2 wiederholen.
+Unter Linux und macOS: `source .venv/bin/activate`.
+
+**3. Pakete installieren** (einmalig)
+
+```powershell
+.venv\Scripts\python -m pip install -r requirements.txt
+```
+
+Der Befehl nennt das Python der Umgebung ausdrücklich. So landen die Pakete immer in `.venv`, auch
+wenn Schritt 2 nicht geklappt hat, und nie im Python des ganzen Rechners. Prüfen: Am Ende steht
+`Successfully installed …`.
+
+**4. Beispiel starten**
+
+```powershell
 python 01_lidar_polar_kartesisch.py     # ganzes Beispiel auf einmal ausführen
 ```
 
-Nach dem Aktivieren steht `(.venv)` vor der Eingabezeile. Meldet PowerShell, dass Skripte nicht
-ausgeführt werden dürfen, einmalig `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` eingeben.
-Unter Linux und macOS aktiviert `source .venv/bin/activate`.
+Meldet Python `No module named 'numpy'` oder ein anderes fehlendes Paket, ist die Umgebung nicht
+aktiv: zurück zu Schritt 2. Welches Python gerade läuft, zeigt
+`python -c "import sys; print(sys.prefix)"`: Die Ausgabe muss auf `.venv` enden.
+
+Später, in jedem neuen Terminal, genügen Schritt 2 und 4. VS Code aktiviert die Umgebung in neuen
+Terminals von selbst, sobald `.venv` als Interpreter gewählt ist (siehe unten).
 
 In VS Code läuft jede Zelle (`# %%`) einzeln mit Shift+Enter. Dafür braucht VS Code die
 Erweiterungen **Python** und **Jupyter** von Microsoft: Strg+Umschalt+X, nach dem Namen suchen,

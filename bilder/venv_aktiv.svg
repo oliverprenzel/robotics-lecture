@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="96" viewBox="0 0 560 96" role="img" aria-label="Terminal in VS Code: vor der Eingabezeile steht grün (.venv)">
+  <rect x="0" y="0" width="560" height="96" rx="8" fill="#1e1e1e"/>
+  <text x="16" y="24" font-family="Consolas, 'Cascadia Mono', Menlo, monospace" font-size="13" fill="#8a8a8a">Umgebung aktiv: grünes (.venv) vor der Eingabezeile</text>
+  <text x="16" y="52" font-family="Consolas, 'Cascadia Mono', Menlo, monospace" font-size="16" fill="#cccccc"><tspan fill="#23d18b" font-weight="bold">(.venv)</tspan> PS C:\Users\du\robotics-lecture&gt; <tspan fill="#ffffff">▌</tspan></text>
+  <text x="16" y="80" font-family="Consolas, 'Cascadia Mono', Menlo, monospace" font-size="16" fill="#cccccc"><tspan fill="#f14c4c" font-weight="bold">✗</tspan> <tspan fill="#8a8a8a">ohne (.venv):</tspan> PS C:\Users\du\robotics-lecture&gt;</text>
+</svg>
