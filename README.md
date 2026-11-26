@@ -213,14 +213,14 @@ Meldet Python `No module named 'numpy'` oder ein anderes fehlendes Paket, ist di
 aktiv: zurück zu Schritt 2. Welches Python gerade läuft, zeigt
 `python -c "import sys; print(sys.prefix)"`: Die Ausgabe muss auf `.venv` enden.
 
-Später, in jedem neuen Terminal, genügen Schritt 2 und 4. VS Code aktiviert die Umgebung in neuen
-Terminals von selbst, sobald `.venv` als Interpreter gewählt ist (siehe unten).
+Später, in jedem neuen Terminal, genügen Schritt 2 und 4. 
 
-In VS Code läuft jede Zelle (`# %%`) einzeln mit Shift+Enter. Dafür braucht VS Code die
-Erweiterungen **Python** und **Jupyter** von Microsoft: Strg+Umschalt+X, nach dem Namen suchen,
-*Installieren*. Öffnet man eine `.py`-Datei, bietet VS Code die Python-Erweiterung meist von selbst
-an. Als Interpreter `.venv` wählen (Strg+Umschalt+P, *Python: Interpreter auswählen*, oder unten
-rechts in der Statusleiste).
+VS Code aktiviert die Umgebung in neuen Terminals von selbst, sobald `.venv` als Interpreter gewählt ist:
+Strg+Umschalt+P, *Python: Interpreter auswählen*, `.venv` wählen; alternativ unten rechts in der Statusleiste.
+
+In VS Code können mit Hilfe von `# %%` Zellen definiert werden, die einzeln mit Shift+Enter ausgeführt werden. Dafür braucht VS Code die Erweiterungen **Python** und **Jupyter** von Microsoft:
+Strg+Umschalt+X, nach dem Namen suchen, *Installieren*. Öffnet man eine `.py`-Datei, bietet VS Code
+die Python-Erweiterung meist von selbst an.
 
 ## Lizenz
 
